@@ -41,7 +41,7 @@
                 <isShapesCompatible:Border>
                     <Border x:Name="CompatibleCanvas">
                         <!--  This is only for Designer, not actually loaded in the real UI tree  -->
-                        <d:Path Data="{StaticResource Windows11Path}" Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
+                        <Image x:Name="MobileOSimg" />
                     </Border>
                 </isShapesCompatible:Border>
             </Grid>

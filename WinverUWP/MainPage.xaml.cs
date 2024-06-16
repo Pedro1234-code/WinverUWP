@@ -14,6 +14,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using WinverUWP.Helpers;
 
 namespace WinverUWP;
@@ -56,6 +57,16 @@ public sealed partial class MainPage : Page
         Window.Current.SetTitleBar(TitleBar);
 
         Window.Current.Activated += Current_Activated;
+
+        if (this.RequestedTheme == ElementTheme.Light)
+        {
+            MobileOSimg.Source = new BitmapImage(new Uri("ms-appx:///458x72.png"));
+        }
+        else
+        {
+            MobileOSimg.Source = new BitmapImage(new Uri("ms-appx:///458x72dark.png"));
+        }
+
     }
 
     private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
@@ -85,6 +96,7 @@ public sealed partial class MainPage : Page
         Thickness currMargin = TitleBar.Margin;
         TitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top, coreTitleBar.SystemOverlayRightInset, currMargin.Bottom);
     }
+
 
     private void CopyButton_Click(object sender, RoutedEventArgs e)
     {
@@ -138,7 +150,6 @@ public sealed partial class MainPage : Page
         var revision = version & 0x000000000000FFFF;
 
         OSName = build >= 21996 ? "Windows11" : "Windows10";
-        UpdateWindowsBrand();
         SetTitleBarBackground();
 
         _uiSettings.ColorValuesChanged += async (uiSettings, _) =>
@@ -202,33 +213,6 @@ public sealed partial class MainPage : Page
         if (string.IsNullOrEmpty(ownerName) && string.IsNullOrEmpty(ownerOrg))
             LicenseTo.Visibility = Visibility.Collapsed;
     }
-
-    private void UpdateWindowsBrand()
-    {
-        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
-        {
-            using FirstDisposableTuple<CanvasPathBuilder, float, float> path = OSName == "Windows11" ? OSPathsHelper.GetWindows11Path() : OSPathsHelper.GetWindows10Path();
-            using CanvasGeometry canvasGeo = CanvasGeometry.CreatePath(path.Item1);
-            CompositionPath compPath = new(canvasGeo);
-            var compositor = Window.Current.Compositor;
-            var compGeo = compositor.CreatePathGeometry(compPath);
-            shape = compositor.CreateSpriteShape(compGeo);
-            shape.FillBrush = compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
-            var shapeVisual = compositor.CreateShapeVisual();
-            shapeVisual.Shapes.Add(shape);
-            shapeVisual.Size = new(path.Item2, path.Item3);
-            Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetElementChildVisual(CompatibleCanvas, shapeVisual);
-            CompatibleCanvas.Width = path.Item2;
-            CompatibleCanvas.Height = path.Item3;
-        }
-        else
-        {
-            string path = (string)Application.Current.Resources[$"{OSName}Path"];
-            var geo = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), path);
-            NonCompatiblePath.Data = geo;
-        }
-    }
-
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         _ = ApplicationView.GetForCurrentView().TryConsolidateAsync();
