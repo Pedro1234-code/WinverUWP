@@ -35,6 +35,7 @@ sealed partial class App : Application
     {
         throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
     }
+    
 
     private void StartApp()
     {

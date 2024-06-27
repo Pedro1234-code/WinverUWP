@@ -10,8 +10,8 @@
 
 	<Identity
 	  Name="MobileOSdev.MobileWinver"
-	  Publisher="CN=Dongle"
-	  Version="2.1.0.0" />
+	  Publisher="CN=70CF1695-06B3-4B57-8DCD-3788C28AED2F"
+	  Version="2.1.7.0" />
 
 	<mp:PhoneIdentity PhoneProductId="fda0e24a-1e63-4f79-8739-72fd5d68db9c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
